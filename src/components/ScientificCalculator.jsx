@@ -221,7 +221,7 @@ const ScientificCalculator = () => {
     : "absolute top-4 right-4 bg-gray-700 text-gray-100 p-2 rounded-full hover:bg-gray-600 transition-colors shadow-md";
   
   return (
-    <div className="flex justify-center items-center min-h-screen pt-8 transition-colors duration-300" style={{ background: darkMode ? '#1a1a2e' : '#f0f2f5' }}>
+    <div className="flex justify-center w-full items-center min-h-screen pt-8 transition-colors duration-300" style={{ background: darkMode ? '#1a1a2e' : '#f0f2f5' }}>
       <div className="relative">
         <button 
           onClick={toggleTheme} 
