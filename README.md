@@ -49,22 +49,83 @@ A modern scientific calculator built with React, Vite, and Tailwind CSS.
 
 ## Project Structure
 
+I've separated the calculator code into multiple files following a modular component architecture pattern. Here's the new structure:
+
 ```
-scientific-calculator/
+calculator-app/
 ├── public/
+│   └── vite.svg
 ├── src/
 │   ├── components/
-│   │   └── ScientificCalculator.jsx
-│   ├── App.jsx
-│   ├── index.css
-│   └── main.jsx
+│   │   ├── ScientificCalculator.jsx     // Main component
+│   │   ├── CalculatorDisplay.jsx        // Display component
+│   │   ├── CalculatorButtons.jsx        // Buttons grid component
+│   │   ├── CalculatorHistory.jsx        // History component
+│   │   └── ThemeToggle.jsx              // Theme controls component
+│   ├── hooks/
+│   │   ├── useTheme.js                  // Theme management logic
+│   │   └── useCalculator.js             // Calculator state & operations
+│   ├── App.jsx                          // App container
+│   ├── main.jsx                         // Entry point
+│   └── index.css                        // Tailwind imports
 ├── .gitignore
+├── eslint.config.js
 ├── index.html
 ├── package.json
+├── postcss.config.js
 ├── README.md
 ├── tailwind.config.js
 └── vite.config.js
 ```
+
+## Component Architecture
+
+The code has been separated into the following components and hooks:
+
+### Components
+
+1. **ScientificCalculator.jsx**
+   - Main container component
+   - Combines all sub-components
+   - Manages layout and theme application
+
+2. **CalculatorDisplay.jsx**
+   - Shows current expression and result
+   - Handles display formatting
+
+3. **CalculatorButtons.jsx**
+   - Contains the calculator button grid
+   - Handles button rendering and styling
+
+4. **CalculatorHistory.jsx**
+   - Displays calculation history
+   - Manages history item styling
+
+5. **ThemeToggle.jsx**
+   - Contains theme control buttons
+   - Handles theme toggle UI
+
+### Hooks
+
+1. **useTheme.js**
+   - Manages theme state (dark/light)
+   - Handles system theme detection
+   - Provides theme toggle functions
+
+2. **useCalculator.js**
+   - Manages calculator state
+   - Contains all calculator logic
+   - Handles operations and history
+
+## Benefits of This Structure
+
+- **Separation of Concerns**: Each component has a single responsibility
+- **Reusability**: Components can be reused in other contexts
+- **Maintainability**: Easier to update and maintain individual parts
+- **Testability**: Smaller components are easier to test
+- **Readability**: Code is organized and easier to understand
+
+The application logic is separated from the UI components through the use of custom hooks, making the code more modular and following best practices for React development.
 
 ## Usage Guide
 
