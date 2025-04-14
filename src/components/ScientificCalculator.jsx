@@ -1,5 +1,3 @@
-import React, { useState, useEffect } from 'react';
-import * as math from 'mathjs';
 import CalculatorDisplay from './CalculatorDisplay';
 import CalculatorButtons from './CalculatorButtons';
 import CalculatorHistory from './CalculatorHistory';
