@@ -1,0 +1,66 @@
+<svg viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect x="0" y="0" width="192" height="192" rx="38" fill="#1a1a2e" />
+  
+  <!-- Calculator Body -->
+  <rect x="30" y="30" width="132" height="132" rx="12" fill="#222" stroke="#444" stroke-width="3" />
+  
+  <!-- Calculator Display -->
+  <rect x="38" y="38" width="116" height="30" rx="4" fill="#111" stroke="#333" stroke-width="1.5" />
+  
+  <!-- Display Content -->
+  <text x="140" y="59" font-family="Arial" font-size="16" fill="#3a57e8" text-anchor="end" font-weight="bold">123.45</text>
+  
+  <!-- Calculator Buttons -->
+  <!-- Row 1 -->
+  <rect x="38" y="76" width="24" height="18" rx="3" fill="#7045af" />
+  <text x="50" y="88" font-family="Arial" font-size="10" fill="white" text-anchor="middle">C</text>
+  
+  <rect x="68" y="76" width="24" height="18" rx="3" fill="#555" />
+  <text x="80" y="88" font-family="Arial" font-size="10" fill="white" text-anchor="middle">±</text>
+  
+  <rect x="98" y="76" width="24" height="18" rx="3" fill="#555" />
+  <text x="110" y="88" font-family="Arial" font-size="10" fill="white" text-anchor="middle">%</text>
+  
+  <rect x="128" y="76" width="24" height="18" rx="3" fill="#3a57e8" />
+  <text x="140" y="88" font-family="Arial" font-size="10" fill="white" text-anchor="middle">÷</text>
+  
+  <!-- Row 2 -->
+  <rect x="38" y="100" width="24" height="18" rx="3" fill="#444" />
+  <text x="50" y="112" font-family="Arial" font-size="10" fill="white" text-anchor="middle">7</text>
+  
+  <rect x="68" y="100" width="24" height="18" rx="3" fill="#444" />
+  <text x="80" y="112" font-family="Arial" font-size="10" fill="white" text-anchor="middle">8</text>
+  
+  <rect x="98" y="100" width="24" height="18" rx="3" fill="#444" />
+  <text x="110" y="112" font-family="Arial" font-size="10" fill="white" text-anchor="middle">9</text>
+  
+  <rect x="128" y="100" width="24" height="18" rx="3" fill="#3a57e8" />
+  <text x="140" y="112" font-family="Arial" font-size="10" fill="white" text-anchor="middle">×</text>
+  
+  <!-- Row 3 -->
+  <rect x="38" y="124" width="24" height="18" rx="3" fill="#444" />
+  <text x="50" y="136" font-family="Arial" font-size="10" fill="white" text-anchor="middle">4</text>
+  
+  <rect x="68" y="124" width="24" height="18" rx="3" fill="#444" />
+  <text x="80" y="136" font-family="Arial" font-size="10" fill="white" text-anchor="middle">5</text>
+  
+  <rect x="98" y="124" width="24" height="18" rx="3" fill="#444" />
+  <text x="110" y="136" font-family="Arial" font-size="10" fill="white" text-anchor="middle">6</text>
+  
+  <rect x="128" y="124" width="24" height="18" rx="3" fill="#3a57e8" />
+  <text x="140" y="136" font-family="Arial" font-size="10" fill="white" text-anchor="middle">−</text>
+  
+  <!-- Row 4 -->
+  <rect x="38" y="148" width="24" height="18" rx="3" fill="#444" />
+  <text x="50" y="160" font-family="Arial" font-size="10" fill="white" text-anchor="middle">1</text>
+  
+  <rect x="68" y="148" width="24" height="18" rx="3" fill="#444" />
+  <text x="80" y="160" font-family="Arial" font-size="10" fill="white" text-anchor="middle">2</text>
+  
+  <rect x="98" y="148" width="24" height="18" rx="3" fill="#444" />
+  <text x="110" y="160" font-family="Arial" font-size="10" fill="white" text-anchor="middle">3</text>
+  
+  <rect x="128" y="148" width="24" height="18" rx="3" fill="#3a57e8" />
+  <text x="140" y="160" font-family="Arial" font-size="10" fill="white" text-anchor="middle">+</text>
+</svg>

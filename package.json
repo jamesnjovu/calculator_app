@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "generate-pwa-assets": "pwa-assets-generator"
   },
   "dependencies": {
     "autoprefixer": "^10.4.21",
