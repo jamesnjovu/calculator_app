@@ -1,37 +1,45 @@
 {
   "name": "calculator-app",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "A modern scientific calculator PWA built with React, Vite and Tailwind CSS",
   "type": "module",
   "author": "James Njovu",
+  "license": "MIT",
   "homepage": "https://jamesnjovu.github.io/calculator_app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jamesnjovu/calculator_app.git"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist",
-    "generate-pwa-assets": "pwa-assets-generator"
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
-    "autoprefixer": "^10.4.21",
-    "mathjs": "^14.4.0",
-    "postcss": "^8.5.3",
+    "mathjs": "^15.2.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "tailwindcss": "^3.4.17"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.21",
     "eslint": "^9.21.0",
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "gh-pages": "^6.3.0",
     "globals": "^15.15.0",
-    "vite": "^6.2.0"
+    "postcss": "^8.5.3",
+    "tailwindcss": "^3.4.17",
+    "vite": "^6.2.0",
+    "vitest": "^5.0.5"
   }
 }
