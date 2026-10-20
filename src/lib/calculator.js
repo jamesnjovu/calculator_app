@@ -11,6 +11,7 @@ export const FUNCTIONS = {
     log: 'log(',
     ln: 'ln(',
     sqrt: '√(',
+    abs: 'abs(',
 };
 
 const FUNCTION_TOKENS = Object.values(FUNCTIONS);
@@ -35,9 +36,9 @@ const lastChar = (str) => str.slice(-1);
 const isOperator = (char) => OPERATORS.includes(char);
 
 // True when the input ends with something that can be followed by an operator.
-export const endsWithOperand = (input) => /[\d.)πe²]$/.test(input);
+export const endsWithOperand = (input) => /[\d.)πe²!]$/.test(input);
 
-const openParenCount = (input) =>
+export const openParenCount = (input) =>
     (input.match(/\(/g) || []).length - (input.match(/\)/g) || []).length;
 
 const closeParens = (input) => input + ')'.repeat(Math.max(0, openParenCount(input)));
@@ -65,7 +66,7 @@ const trigScope = (angleMode) => {
         trigCos: (x) => snap(Math.cos(toRadians(x))),
         trigTan: (x) => {
             const cos = snap(Math.cos(toRadians(x)));
-            if (cos === 0) throw new Error('Undefined');
+            if (cos === 0) throw new CalculatorError('Undefined');
             return snap(Math.tan(toRadians(x)));
         },
     };
@@ -78,6 +79,7 @@ const MATH_FUNCTIONS = {
     'log(': 'log10(',
     'ln(': 'log(',
     '√(': 'sqrt(',
+    'abs(': 'abs(',
 };
 
 // Translates the display string into an expression math.js understands.
@@ -85,7 +87,7 @@ export const toMathExpression = (input) =>
     input
         // Scientific notation coming from formatted results, e.g. 1.5e+20
         .replace(/([\d.])e([+−]?)(?=\d)/g, (_, digit, sign) => `${digit}E${sign === '−' ? '-' : sign}`)
-        .replace(/sin\(|cos\(|tan\(|log\(|ln\(|√\(/g, (fn) => MATH_FUNCTIONS[fn])
+        .replace(/sin\(|cos\(|tan\(|log\(|ln\(|√\(|abs\(/g, (fn) => MATH_FUNCTIONS[fn])
         .replace(/π/g, 'pi')
         .replace(/²/g, '^2')
         .replace(/×/g, '*')
@@ -93,16 +95,31 @@ export const toMathExpression = (input) =>
         .replace(/−/g, '-')
         .replace(/E/g, 'e');
 
-// Evaluates a display string. Unbalanced parentheses are closed automatically.
-// Throws when the expression is incomplete or the result is not a real number.
-export const evaluateInput = (input, angleMode = 'DEG') => {
-    if (!input) throw new Error('Empty expression');
-    const closed = closeParens(input);
-    if (!endsWithOperand(closed)) throw new Error('Incomplete expression');
+// Error whose message is meant to be shown to the user.
+export class CalculatorError extends Error {}
 
-    const value = evaluate(toMathExpression(closed), trigScope(angleMode));
+const resultError = (value, input) => {
+    if (Number.isNaN(value)) return 'Invalid input';
+    if (/÷/.test(input)) return "Can't divide by zero";
+    return 'Out of range';
+};
+
+// Evaluates a display string. Unbalanced parentheses are closed automatically.
+// Throws a CalculatorError when the expression is incomplete or the result is
+// not a finite real number.
+export const evaluateInput = (input, angleMode = 'DEG') => {
+    if (!input) throw new CalculatorError('Empty expression');
+    const closed = closeParens(input);
+    if (!endsWithOperand(closed)) throw new CalculatorError('Incomplete expression');
+
+    let value;
+    try {
+        value = evaluate(toMathExpression(closed), trigScope(angleMode));
+    } catch (error) {
+        throw error instanceof CalculatorError ? error : new CalculatorError('Invalid expression');
+    }
     if (typeof value !== 'number' || !Number.isFinite(value)) {
-        throw new Error('Invalid result');
+        throw new CalculatorError(resultError(value, closed));
     }
     return value;
 };
@@ -142,7 +159,7 @@ const withInput = (state, input) => ({
 
 const inputDigit = (state, digit) => {
     let input = operandBase(state);
-    if (/[)πe²]$/.test(input) && !/[\d.]e$/.test(input)) input += '×';
+    if (/[)πe²!]$/.test(input) && !/[\d.]e$/.test(input)) input += '×';
     // Replace a lone leading zero ("0" -> "7", "5+0" -> "5+7")
     if (/(^|[^\d.])0$/.test(input)) input = input.slice(0, -1);
     return withInput(state, (input + digit).slice(0, MAX_INPUT_LENGTH));
@@ -207,6 +224,13 @@ const inputSquare = (state) => {
     return withInput(state, input + '²');
 };
 
+const inputFactorial = (state) => {
+    if (state.error) return state;
+    const input = state.justEvaluated ? wrapValue(state.result) : state.input;
+    if (!endsWithOperand(input)) return state;
+    return withInput(state, input + '!');
+};
+
 const inputReciprocal = (state) => {
     if (state.error) return state;
     const input = state.justEvaluated ? state.result : closeParens(state.input);
@@ -259,8 +283,8 @@ const evaluateExpression = (state) => {
                 ...state.history,
             ].slice(0, MAX_HISTORY),
         };
-    } catch {
-        return { ...state, error: 'Error', justEvaluated: false };
+    } catch (error) {
+        return { ...state, error: error.message, justEvaluated: false };
     }
 };
 
@@ -288,6 +312,8 @@ export function calculatorReducer(state, action) {
             return action.value === 'π' || action.value === 'e' ? inputValue(state, action.value) : state;
         case 'square':
             return inputSquare(state);
+        case 'factorial':
+            return inputFactorial(state);
         case 'reciprocal':
             return inputReciprocal(state);
         case 'toggleSign':
