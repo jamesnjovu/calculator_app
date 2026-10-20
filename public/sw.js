@@ -1,6 +1,6 @@
 // Service Worker for Scientific Calculator PWA
 // Bump the version to discard caches from previous releases.
-const CACHE_NAME = 'calculator-app-v2';
+const CACHE_NAME = 'calculator-app-v3';
 
 // Resolved relative to the service worker's scope, so it works under any base path
 const scopeUrl = (path) => new URL(path, self.registration.scope).toString();

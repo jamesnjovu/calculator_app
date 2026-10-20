@@ -8,16 +8,20 @@ A modern scientific calculator built with React, Vite and Tailwind CSS. It insta
 
 ## Features
 
+- **Basic and Scientific modes**: a clean number pad, or the full set of scientific keys
 - **Arithmetic** with correct operator precedence: `+`, `−`, `×`, `÷`, powers (`xʸ`) and parentheses
-- **Scientific functions**: `sin`, `cos`, `tan`, `log`, `ln`, `√`, `x²`, `1/x`, constants `π` and `e`
+- **Scientific functions**: `sin`, `cos`, `tan`, `log`, `ln`, `√`, `x²`, `1/x`, `|x|`, `n!`, constants `π` and `e`
 - **Degree / radian mode**: tap `DEG` / `RAD` in the display to switch
-- **Live preview** of the result while you type
-- **Memory**: `MS` (store), `MR` (recall), `M+`, `M−`, `MC` (clear), with an `M` indicator in the display
+- **Readable display**: live result preview, coloured operators, faded auto-closing parentheses and text that shrinks to fit long numbers
+- **Clear error messages** such as "Can't divide by zero" or "Incomplete expression"
+- **Copy** the result to the clipboard with one tap
+- **Memory**: `MS` (store), `MR` (recall), `M+`, `M−`, `MC` (clear), with the stored value shown in the display
 - **Ans** inserts the previous result; `±` toggles the sign of the current number
-- **History**: newest first, tap an entry to reuse its result
-- **Keyboard support** (see below)
+- **History**: a side panel on large screens and a slide-up sheet on phones; tap an entry to reuse its result
+- **Keyboard support** with on-screen key highlighting (see below)
+- **Responsive layout**: full-screen keypad on phones, card layout on tablets and desktops
 - **Light, dark and system themes**
-- **Saved between visits**: theme, angle mode, memory and history
+- **Saved between visits**: mode, theme, angle unit, memory and history
 - **Installable PWA** that works offline
 
 ## Usage
@@ -33,6 +37,7 @@ Invalid operations (division by zero, `√` of a negative number, `tan(90°)` an
 | `0`–`9`, `.` | Digits and decimal point |
 | `+` `-` `*` `/` `^` | Operators |
 | `(` `)` | Parentheses |
+| `!` | Factorial |
 | `p`, `e` | π and e |
 | `Enter` or `=` | Evaluate |
 | `Backspace` | Delete the last character or function |
@@ -78,17 +83,22 @@ calculator_app/
 ├── src/
 │   ├── components/
 │   │   ├── ScientificCalculator.jsx   # Main layout
+│   │   ├── Header.jsx                 # Mode switch, history, theme and install buttons
 │   │   ├── CalculatorDisplay.jsx      # Expression, result, DEG/RAD and memory indicator
-│   │   ├── CalculatorButtons.jsx      # Button grid
+│   │   ├── Keypad.jsx                 # Memory, scientific and number keys
 │   │   ├── CalculatorHistory.jsx      # Calculation history
-│   │   └── ThemeToggle.jsx            # Theme controls
+│   │   ├── Toast.jsx                  # Short confirmations
+│   │   └── Icons.jsx                  # Inline SVG icons
 │   ├── hooks/
-│   │   ├── useCalculator.js           # Calculator state, persistence, keyboard input
+│   │   ├── useCalculator.js           # Calculator state and persistence
+│   │   ├── useKeyboard.js             # Keyboard input
+│   │   ├── usePersistentState.js      # State saved to localStorage
 │   │   ├── useInstallPrompt.js        # PWA install button
 │   │   └── useTheme.js                # Light, dark and system theme
 │   ├── lib/
 │   │   ├── calculator.js              # Calculator logic (pure reducer)
 │   │   ├── calculator.test.js         # Unit tests
+│   │   ├── keys.js                    # Key layout and keyboard mapping
 │   │   └── storage.js                 # Safe localStorage helpers
 │   ├── App.jsx
 │   ├── main.jsx

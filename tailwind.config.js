@@ -7,8 +7,14 @@ export default {
   ],
   theme: {
     extend: {
-      minHeight: {
-        11: '2.75rem',
+      keyframes: {
+        'slide-up': {
+          from: { transform: 'translateY(100%)', opacity: '0' },
+          to: { transform: 'translateY(0)', opacity: '1' },
+        },
+      },
+      animation: {
+        'slide-up': 'slide-up 200ms ease-out',
       },
     },
   },
