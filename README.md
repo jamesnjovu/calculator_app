@@ -8,27 +8,46 @@ A modern scientific calculator built with React, Vite and Tailwind CSS. It insta
 
 ## Features
 
-- **Basic and Scientific modes**: a clean number pad, or the full set of scientific keys
-- **Arithmetic** with correct operator precedence: `+`, `−`, `×`, `÷`, powers (`xʸ`) and parentheses
-- **Scientific functions**: `sin`, `cos`, `tan`, `log`, `ln`, `√`, `x²`, `1/x`, `|x|`, `n!`, constants `π` and `e`
-- **Degree / radian mode**: tap `DEG` / `RAD` in the display to switch
-- **Readable display**: live result preview, coloured operators, faded auto-closing parentheses and text that shrinks to fit long numbers
-- **Clear error messages** such as "Can't divide by zero" or "Incomplete expression"
-- **Copy** the result to the clipboard with one tap
-- **Memory**: `MS` (store), `MR` (recall), `M+`, `M−`, `MC` (clear), with the stored value shown in the display
-- **Ans** inserts the previous result; `±` toggles the sign of the current number
-- **History**: a side panel on large screens and a slide-up sheet on phones; tap an entry to reuse its result
-- **Keyboard support** with on-screen key highlighting (see below)
-- **Responsive layout**: full-screen keypad on phones, card layout on tablets and desktops
-- **Light, dark and system themes**
-- **Saved between visits**: mode, theme, angle unit, memory and history
-- **Installable PWA** that works offline
+Inspired by the Casio fx-991ES PLUS II.
+
+### Modes
+
+| Mode | What it does |
+| --- | --- |
+| **Basic** | Everyday arithmetic with a clean number pad |
+| **Calculate** | Full scientific calculator (see below) |
+| **Complex** | Complex arithmetic with `i`, `∠`, `arg`, `Conjg`, `ReP`, `ImP`; results as a+bi or r∠θ |
+| **Statistics** | One-variable statistics (mean, σ, s, quartiles…) with frequencies, and 7 regression models: linear, quadratic, logarithmic, e-exponential, ab-exponential, power and inverse, with r and ŷ estimates |
+| **Base-N** | Decimal, hexadecimal, binary and octal conversion; +, −, ×, ÷, and, or, xor, xnor, Not, Neg on 32-bit integers |
+| **Equation** | Simultaneous linear equations in 2 or 3 unknowns, quadratic (with minimum/maximum) and cubic equations, including complex roots |
+| **Matrix** | Matrices up to 4×4: addition, subtraction, multiplication, scalar multiple, determinant, transpose, inverse, powers |
+| **Table** | Table of values for f(x) and g(x) over a range |
+| **Vector** | 2D and 3D vectors: sum, difference, dot and cross product, length, unit vector, angle between |
+
+### Calculate mode
+
+- **Natural display**: fractions, roots, powers, integrals, sums and derivatives are drawn as in a textbook, with empty slots showing what is still needed
+- **Exact results**: fractions (`1/3`), surds (`√3/2`) and multiples of π (`π/3`); **S⇔D** switches to the decimal value
+- **SHIFT and hyp keys** give every key a second function, shown in amber above it
+- **Functions**: sin, cos, tan and their inverses and hyperbolic forms, log, ln, logₐb, 10ˣ, eˣ, x², x³, xʸ, √, ∛, ˣ√, x⁻¹, x!, %, Abs, Int, Intg, GCD, LCM, nPr, nCr, Ran#, RanInt, ×10ˣ, degrees-minutes-seconds (°′″)
+- **Calculus**: definite integrals ∫, derivatives d/dx, sums Σ and products Π of f(X)
+- **SOLVE**: type an equation in X (for example `X²=2`) and press SHIFT then = to solve it
+- **Variables** A–F, X, Y and M with STO, plus **Ans** and **PreAns**
+- **Catalog** of every function, **40 scientific constants** (CODATA 2018) and **40 unit conversions**, with search
+- **Settings**: degrees, radians or gradians; Norm, Fix, Sci or Eng number format; natural or linear display; exact or decimal results
+- Clear error messages such as "Can't divide by zero" or "Incomplete expression"; ⌫ after an error goes back to editing
+
+### Everywhere
+
+- Live result preview, one-tap copy, history with tap-to-reuse
+- Keyboard support with on-screen key highlighting
+- Responsive layout: full-screen keypad on phones, card with a history panel on larger screens
+- Light, dark and system themes; settings, data and history are saved between visits
+- Installable PWA that works offline
 
 ## Usage
 
-Type an expression and press `=`. Functions such as `sin` open a parenthesis (`sin(`); missing closing parentheses are added automatically when you evaluate. Pressing an operator right after a result continues from that result; typing a number starts a new calculation.
-
-Invalid operations (division by zero, `√` of a negative number, `tan(90°)` and so on) show `Error`. The next key press clears it.
+Type an expression and press `=`. Functions such as `sin` open a parenthesis; missing closing parentheses are added automatically. Pressing an operator right after a result continues with `Ans`; typing a number starts a new calculation. Functions with several parts, like `∫(f, a, b)`, take their parts separated by commas (SHIFT then `)`).
 
 ### Keyboard shortcuts
 
@@ -36,9 +55,9 @@ Invalid operations (division by zero, `√` of a negative number, `tan(90°)` an
 | --- | --- |
 | `0`–`9`, `.` | Digits and decimal point |
 | `+` `-` `*` `/` `^` | Operators |
-| `(` `)` | Parentheses |
-| `!` | Factorial |
-| `p`, `e` | π and e |
+| `(` `)` `,` | Parentheses and argument separator |
+| `!`, `%` | Factorial, percent |
+| `p`, `e`, `i`, `X` | π, e, i (Complex mode) and the variable X |
 | `Enter` or `=` | Evaluate |
 | `Backspace` | Delete the last character or function |
 | `Escape`, `Delete` or `c` | Clear |
@@ -76,41 +95,36 @@ Every push to `main` runs the [CI and Deploy](.github/workflows/deploy.yml) work
 ```
 calculator_app/
 ├── .github/workflows/deploy.yml   # CI and GitHub Pages deployment
-├── public/
-│   ├── icons/                     # App icons (SVG and PNG)
-│   ├── manifest.json              # PWA manifest
-│   └── sw.js                      # Service worker (offline support)
+├── public/                        # Icons, PWA manifest, service worker
 ├── src/
 │   ├── components/
-│   │   ├── ScientificCalculator.jsx   # Main layout
-│   │   ├── Header.jsx                 # Mode switch, history, theme and install buttons
-│   │   ├── CalculatorDisplay.jsx      # Expression, result, DEG/RAD and memory indicator
-│   │   ├── Keypad.jsx                 # Memory, scientific and number keys
-│   │   ├── CalculatorHistory.jsx      # Calculation history
-│   │   ├── Toast.jsx                  # Short confirmations
-│   │   └── Icons.jsx                  # Inline SVG icons
-│   ├── hooks/
-│   │   ├── useCalculator.js           # Calculator state and persistence
-│   │   ├── useKeyboard.js             # Keyboard input
-│   │   ├── usePersistentState.js      # State saved to localStorage
-│   │   ├── useInstallPrompt.js        # PWA install button
-│   │   └── useTheme.js                # Light, dark and system theme
+│   │   ├── ScientificCalculator.jsx   # Layout, modes and panels
+│   │   ├── CalculatorDisplay.jsx      # Indicators, input and result
+│   │   ├── MathView.jsx               # Natural (textbook) rendering
+│   │   ├── Keypad.jsx                 # Keys with SHIFT and hyp layers
+│   │   ├── Header.jsx, ModeMenu.jsx, CatalogPanel.jsx,
+│   │   │   SettingsPanel.jsx, VariablesPanel.jsx, CalculatorHistory.jsx
+│   │   ├── modes/                     # Statistics, Base-N, Equation, Matrix, Table, Vector
+│   │   └── ui.jsx, Icons.jsx, Toast.jsx
+│   ├── hooks/                         # Calculator state, theme, keyboard, persistence
 │   ├── lib/
-│   │   ├── calculator.js              # Calculator logic (pure reducer)
-│   │   ├── calculator.test.js         # Unit tests
-│   │   ├── keys.js                    # Key layout and keyboard mapping
-│   │   └── storage.js                 # Safe localStorage helpers
-│   ├── App.jsx
-│   ├── main.jsx
-│   ├── registerSW.js
-│   └── index.css
+│   │   ├── calculator.js              # Calculator reducer (editing, evaluation, results)
+│   │   ├── tokens.js                  # Expression tokens and translation to math.js
+│   │   ├── engine.js                  # Evaluation, calculus and SOLVE
+│   │   ├── complex.js                 # Complex number evaluation
+│   │   ├── numberFormat.js            # Norm/Fix/Sci/Eng, exact forms, DMS
+│   │   ├── naturalDisplay.js          # Expression trees for natural display
+│   │   ├── equation.js, statistics.js, linearAlgebra.js, baseN.js, table.js
+│   │   ├── constants.js, conversions.js, catalog.js, keys.js, modes.js
+│   │   └── *.test.js                  # Unit tests
+│   ├── App.jsx, main.jsx, registerSW.js, index.css
 ├── index.html
 ├── package.json
 ├── tailwind.config.js
 └── vite.config.js
 ```
 
-All calculator behaviour lives in `src/lib/calculator.js` as a pure reducer, which keeps the UI components simple and makes the logic easy to test. Expressions are evaluated with [math.js](https://mathjs.org/) rather than `eval`.
+All calculation logic lives in `src/lib` as plain, tested JavaScript; the components only display state and send actions. Expressions are evaluated with [math.js](https://mathjs.org/) rather than `eval`.
 
 ## Contributing
 
