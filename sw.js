@@ -1,74 +1,63 @@
 // Service Worker for Scientific Calculator PWA
-const CACHE_NAME = 'calculator-app-v1';
+// Bump the version to discard caches from previous releases.
+const CACHE_NAME = 'calculator-app-v2';
 
-// Files to cache for offline use
-const urlsToCache = [
-    '/calculator_app/',
-    '/calculator_app/index.html',
-    '/calculator_app/assets/index.css',
-    '/calculator_app/assets/index.js',
-    '/calculator_app/manifest.json',
-    '/calculator_app/icons/icon-192x192.svg',
-    '/calculator_app/icons/icon-512x512.svg'
+// Resolved relative to the service worker's scope, so it works under any base path
+const scopeUrl = (path) => new URL(path, self.registration.scope).toString();
+
+const PRECACHE_URLS = [
+    './',
+    'manifest.json',
+    'icons/icon-192x192.png',
+    'icons/icon-512x512.png',
+    'icons/icon-192x192.svg',
 ];
 
-// Install event - caches app resources
-self.addEventListener('install', event => {
+self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME)
-            .then(cache => {
-                console.log('Opened cache');
-                return cache.addAll(urlsToCache);
-            })
+            .then((cache) => cache.addAll(PRECACHE_URLS.map(scopeUrl)))
+            .then(() => self.skipWaiting())
     );
 });
 
-// Activate event - clean up old caches
-self.addEventListener('activate', event => {
-    const cacheWhitelist = [CACHE_NAME];
+// Remove caches left by older versions
+self.addEventListener('activate', (event) => {
     event.waitUntil(
-        caches.keys().then(cacheNames => {
-            return Promise.all(
-                cacheNames.map(cacheName => {
-                    if (cacheWhitelist.indexOf(cacheName) === -1) {
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
-        })
+        caches.keys()
+            .then((names) => Promise.all(
+                names.filter((name) => name !== CACHE_NAME).map((name) => caches.delete(name))
+            ))
+            .then(() => self.clients.claim())
     );
 });
 
-// Fetch event - serve cached content when offline
-self.addEventListener('fetch', event => {
+const putInCache = (request, response) => {
+    if (response && response.ok && response.type === 'basic') {
+        const copy = response.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+    }
+    return response;
+};
+
+self.addEventListener('fetch', (event) => {
+    const { request } = event;
+    if (request.method !== 'GET' || new URL(request.url).origin !== self.location.origin) return;
+
+    // Pages: network first so new releases show up, cached shell when offline
+    if (request.mode === 'navigate') {
+        event.respondWith(
+            fetch(request)
+                .then((response) => putInCache(scopeUrl('./'), response))
+                .catch(() => caches.match(scopeUrl('./')))
+        );
+        return;
+    }
+
+    // Static assets have hashed file names, so a cached copy is always valid
     event.respondWith(
-        caches.match(event.request)
-            .then(response => {
-                // Cache hit - return response
-                if (response) {
-                    return response;
-                }
-                return fetch(event.request).then(
-                    response => {
-                        // Return the response directly if not a valid response to cache
-                        if (!response || response.status !== 200 || response.type !== 'basic') {
-                            return response;
-                        }
-
-                        // Clone the response since it's a stream that can only be consumed once
-                        const responseToCache = response.clone();
-
-                        caches.open(CACHE_NAME)
-                            .then(cache => {
-                                cache.put(event.request, responseToCache);
-                            });
-
-                        return response;
-                    }
-                );
-            }).catch(() => {
-                // If both cache and network fail, you might want to show a generic offline page
-                // For simplicity, we're not doing that here
-            })
+        caches.match(request).then((cached) =>
+            cached || fetch(request).then((response) => putInCache(request, response))
+        )
     );
 });
