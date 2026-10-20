@@ -5,7 +5,7 @@ export const MODES = [
     { id: 'COMP', name: 'Calculate', description: 'Scientific functions, calculus, SOLVE', engine: 'COMP' },
     { id: 'CMPLX', name: 'Complex', description: 'Complex numbers in a+bi or r∠θ form', engine: 'CMPLX' },
     { id: 'STAT', name: 'Statistics', description: 'One-variable stats and regressions' },
-    { id: 'BASEN', name: 'Base-N', description: 'Binary, octal, decimal, hexadecimal' },
+    { id: 'BASEN', name: 'Base-N', description: 'DEC, HEX, BIN, OCT arithmetic and logic' },
     { id: 'EQN', name: 'Equation', description: 'Simultaneous, quadratic and cubic equations' },
     { id: 'MATRIX', name: 'Matrix', description: 'Matrix arithmetic, determinant, inverse' },
     { id: 'TABLE', name: 'Table', description: 'Table of values for f(x) and g(x)' },
