@@ -1,32 +1,26 @@
-import React from 'react';
-
-const ThemeToggle = ({ darkMode, isSystemTheme, toggleTheme, useSystemTheme }) => {
-    const toggleBtnClass = darkMode
-        ? "p-2 rounded-full hover:bg-yellow-400 transition-colors shadow-md"
-        : "p-2 rounded-full hover:bg-gray-600 transition-colors shadow-md";
-
-    return (
-        <div className="flex justify-end space-x-2 mb-2">
-            <button
-                onClick={useSystemTheme}
-                className={`${toggleBtnClass} ${isSystemTheme
-                    ? (darkMode ? 'bg-green-600' : 'bg-green-500')
-                    : (darkMode ? 'bg-gray-700' : 'bg-gray-300')}`}
-                title="Use System Theme"
-            >
-                <span className="text-sm">System</span>
-            </button>
-            <button
-                onClick={toggleTheme}
-                className={`${toggleBtnClass} ${darkMode
-                    ? 'bg-yellow-500 text-gray-900'
-                    : 'bg-gray-700 text-gray-100'}`}
-                title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
-            >
-                {darkMode ? "☀️" : "🌙"}
-            </button>
-        </div>
-    );
-};
+const ThemeToggle = ({ darkMode, isSystemTheme, toggleTheme, resetToSystemTheme }) => (
+    <div className="mb-2 flex justify-end space-x-2">
+        <button
+            type="button"
+            onClick={resetToSystemTheme}
+            aria-pressed={isSystemTheme}
+            className={`rounded-full px-3 py-2 text-sm shadow-md transition-colors ${isSystemTheme
+                ? 'bg-green-500 text-white dark:bg-green-600'
+                : 'bg-gray-300 text-gray-800 hover:bg-gray-400 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600'}`}
+            title="Use system theme"
+        >
+            System
+        </button>
+        <button
+            type="button"
+            onClick={toggleTheme}
+            className="rounded-full bg-gray-700 p-2 text-gray-100 shadow-md transition-colors hover:bg-gray-600 dark:bg-yellow-500 dark:text-gray-900 dark:hover:bg-yellow-400"
+            title={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+            aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+        >
+            {darkMode ? '☀️' : '🌙'}
+        </button>
+    </div>
+);
 
 export default ThemeToggle;
