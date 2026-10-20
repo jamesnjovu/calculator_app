@@ -34,7 +34,7 @@ const CalculatorHistory = ({ history, onRecall, onClear, onClose, className = ''
                     <li key={item.id}>
                         <button
                             type="button"
-                            onClick={() => onRecall(item.result)}
+                            onClick={() => onRecall(item)}
                             className="w-full rounded-xl px-3 py-2.5 text-right outline-none transition hover:bg-slate-200/70 focus-visible:ring-2 focus-visible:ring-indigo-500 dark:hover:bg-slate-800"
                             title="Use this result"
                         >
