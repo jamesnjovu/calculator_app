@@ -71,10 +71,12 @@ describe('evaluation', () => {
     });
 
     it('reports undefined results as errors', () => {
-        expect(press(['tan', '9', '0', '=']).error).toBe('Error');
-        expect(press(['1', '÷', '0', '=']).error).toBe('Error');
-        expect(press(['sqrt', '−', '1', '=']).error).toBe('Error');
-        expect(press(['log', '0', '=']).error).toBe('Error');
+        expect(press(['tan', '9', '0', '=']).error).toBe('Undefined');
+        expect(press(['1', '÷', '0', '=']).error).toBe("Can't divide by zero");
+        expect(press(['sqrt', '−', '1', '=']).error).toBe('Invalid input');
+        expect(press(['log', '0', '=']).error).toBe('Out of range');
+        expect(press(['1', '0', '^', '4', '0', '0', '=']).error).toBe('Out of range');
+        expect(press(['2', '+', '=']).error).toBe('Incomplete expression');
     });
 
     it('ignores equals on an empty expression', () => {
@@ -138,6 +140,13 @@ describe('input handling', () => {
         expect(press(['3', 'x²', '=']).result).toBe('9');
         expect(press(['4', '1/x', '=']).result).toBe('0.25');
         expect(press(['−', '3', '=', 'x²', '=']).result).toBe('9');
+    });
+
+    it('supports absolute value and factorial', () => {
+        expect(press(['abs', '−', '7', '=']).result).toBe('7');
+        expect(press(['5', { type: 'factorial' }, '=']).result).toBe('120');
+        expect(press(['3', { type: 'factorial' }, '2']).input).toBe('3!×2');
+        expect(press(['−', '1', { type: 'factorial' }, '=']).result).toBe('−1');
     });
 
     it('toggles the sign of the trailing number', () => {
