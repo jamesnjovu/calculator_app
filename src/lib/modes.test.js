@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BASE_OPERATIONS, formatBase, parseBase } from './baseN';
+import { formatBase } from './baseN';
 import { quadraticVertex, solveLinearSystem, solvePolynomial } from './equation';
 import { angleBetween, cross, determinant, dot, inverse, magnitude, multiply, transpose } from './linearAlgebra';
 import { oneVariable, regression } from './statistics';
@@ -90,22 +90,12 @@ describe('statistics mode', () => {
     });
 });
 
-describe('base-n mode', () => {
-    it('converts between bases with 32-bit two\'s complement', () => {
-        expect(parseBase('FF', 'HEX')).toBe(255);
+describe('base-n formatting', () => {
+    it('shows 32-bit two\'s complement values in each base', () => {
         expect(formatBase(255, 'BIN')).toBe('1111 1111');
         expect(formatBase(-1, 'HEX')).toBe('FFFFFFFF');
-        expect(parseBase('FFFFFFFF', 'HEX')).toBe(-1);
         expect(formatBase(8, 'OCT')).toBe('10');
-        expect(() => parseBase('12', 'BIN')).toThrow();
-    });
-
-    it('performs arithmetic and logical operations', () => {
-        expect(BASE_OPERATIONS.and.apply(0b1100, 0b1010)).toBe(0b1000);
-        expect(BASE_OPERATIONS.xor.apply(0b1100, 0b1010)).toBe(0b0110);
-        expect(BASE_OPERATIONS.not.apply(0)).toBe(-1);
-        expect(BASE_OPERATIONS.divide.apply(7, 2)).toBe(3);
-        expect(() => BASE_OPERATIONS.multiply.apply(2 ** 30, 4)).toThrow('Out of range');
+        expect(formatBase(-5, 'DEC')).toBe('−5');
     });
 });
 

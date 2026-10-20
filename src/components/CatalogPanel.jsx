@@ -9,8 +9,8 @@ const TABS = [
     { value: 'conversions', label: 'Conversions' },
 ];
 
-const CatalogPanel = ({ complexMode, onInsert, onClose }) => {
-    const [tab, setTab] = useState('functions');
+const CatalogPanel = ({ complexMode, initialTab = 'functions', onInsert, onClose }) => {
+    const [tab, setTab] = useState(initialTab);
     const [query, setQuery] = useState('');
 
     const items = useMemo(() => {

@@ -8,7 +8,7 @@ import ModeMenu from './ModeMenu';
 import SettingsPanel from './SettingsPanel';
 import Toast from './Toast';
 import VariablesPanel from './VariablesPanel';
-import BaseNMode from './modes/BaseNMode';
+import BaseNCalculator from './modes/BaseNCalculator';
 import EquationMode from './modes/EquationMode';
 import MatrixMode from './modes/MatrixMode';
 import StatisticsMode from './modes/StatisticsMode';
@@ -28,7 +28,6 @@ import { loadJSON } from '../lib/storage';
 
 const MODE_SCREENS = {
   STAT: StatisticsMode,
-  BASEN: BaseNMode,
   EQN: EquationMode,
   MATRIX: MatrixMode,
   TABLE: TableMode,
@@ -50,6 +49,7 @@ const ScientificCalculator = () => {
   const { canInstall, promptInstall } = useInstallPrompt();
   const [modeId, setModeId] = usePersistentState('calculator-ui-mode', defaultMode(), (value) => MODES.some((mode) => mode.id === value));
   const [panel, setPanel] = useState(null);
+  const [catalogTab, setCatalogTab] = useState('functions');
   const [modifiers, setModifiers] = useState({ shift: false, hyp: false });
   const [pressedId, setPressedId] = useState(null);
   const [toast, setToast] = useState('');
@@ -92,9 +92,22 @@ const ScientificCalculator = () => {
       return;
     }
     if (action.type === 'ui') {
-      if (action.value === 'shift') setModifiers((current) => ({ ...current, shift: !current.shift }));
-      if (action.value === 'hyp') setModifiers((current) => ({ ...current, hyp: !current.hyp }));
+      if (action.value === 'shift') {
+        setModifiers((current) => ({ ...current, shift: !current.shift }));
+        return;
+      }
+      if (action.value === 'hyp') {
+        setModifiers((current) => ({ ...current, hyp: !current.hyp }));
+        return;
+      }
       if (action.value === 'variables') setPanel('variables');
+      if (action.value === 'mode') selectMode(action.mode);
+      if (action.value === 'catalog') openCatalog(action.tab);
+      if (action.value === 'clearMemory') {
+        dispatch({ type: 'clearVariables' });
+        showToast('Memory and variables cleared');
+      }
+      setModifiers({ shift: false, hyp: false });
       return;
     }
     dispatch(action);
@@ -138,6 +151,11 @@ const ScientificCalculator = () => {
     setPanel(null);
   };
 
+  const openCatalog = (tab = 'functions') => {
+    setCatalogTab(tab);
+    setPanel('catalog');
+  };
+
   const insertFromCatalog = (item) => {
     dispatch(item.operand ? { type: 'insertOperand', value: item.value ?? item.token } : { type: 'insert', value: item.token });
     setPanel(null);
@@ -166,7 +184,7 @@ const ScientificCalculator = () => {
         <Header
           modeName={mode.name}
           onOpenMode={() => setPanel('mode')}
-          onOpenCatalog={mode.id === 'COMP' || mode.id === 'CMPLX' ? () => setPanel('catalog') : null}
+          onOpenCatalog={mode.id === 'COMP' || mode.id === 'CMPLX' ? () => openCatalog() : null}
           onOpenSettings={() => setPanel('settings')}
           onOpenHistory={isCalculator ? () => setPanel('history') : null}
           themePreference={preference}
@@ -197,6 +215,8 @@ const ScientificCalculator = () => {
               />
             </div>
           </>
+        ) : mode.id === 'BASEN' ? (
+          <BaseNCalculator keyboardEnabled={panel === null} />
         ) : (
           <div className="-mx-1 min-h-0 flex-1 overflow-y-auto px-1 pb-2 pt-1">
             <ModeScreen settings={state.settings} format={format} formatComplex={formatAny} scope={buildScope(state)} />
@@ -209,7 +229,7 @@ const ScientificCalculator = () => {
           </div>
         )}
         {panel === 'mode' && <ModeMenu current={mode.id} onSelect={selectMode} onClose={closePanel} />}
-        {panel === 'catalog' && <CatalogPanel complexMode={mode.id === 'CMPLX'} onInsert={insertFromCatalog} onClose={closePanel} />}
+        {panel === 'catalog' && <CatalogPanel complexMode={mode.id === 'CMPLX'} initialTab={catalogTab} onInsert={insertFromCatalog} onClose={closePanel} />}
         {panel === 'settings' && (
           <SettingsPanel
             settings={state.settings}

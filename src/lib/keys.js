@@ -5,7 +5,10 @@
 // An action can be a list of actions applied in order.
 
 const insert = (value) => ({ type: 'insert', value });
-const digit = (value) => ({ id: value, label: value, action: { type: 'digit', value }, kind: 'number' });
+const digit = (value, shift) => ({ id: value, label: value, action: { type: 'digit', value }, kind: 'number', ...(shift ? { shift } : {}) });
+
+// SHIFT + a number key opens a mode or menu, as on the fx-991ES PLUS
+const openMode = (label, mode, name) => variant(label, { type: 'ui', value: 'mode', mode }, `Open ${name} mode`);
 const operator = (label, ariaLabel, extra = {}) => ({ id: label, label, ariaLabel, action: { type: 'operator', value: label }, kind: 'operator', ...extra });
 const variant = (label, action, ariaLabel = label) => ({ label, action, ariaLabel });
 const fn = (label, token, ariaLabel, extra = {}) => ({ id: token, label, ariaLabel, action: insert(token), kind: 'function', ...extra });
@@ -96,13 +99,19 @@ export const NUMPAD_KEYS = [
     { id: '±', label: '±', ariaLabel: 'Toggle sign', action: { type: 'toggleSign' }, kind: 'control' },
     operator('÷', 'Divide'),
 
-    digit('7'), digit('8'), digit('9'),
+    digit('7', variant('CONST', { type: 'ui', value: 'catalog', tab: 'constants' }, 'Scientific constants')),
+    digit('8', variant('CONV', { type: 'ui', value: 'catalog', tab: 'conversions' }, 'Unit conversions')),
+    digit('9', variant('CLR', { type: 'ui', value: 'clearMemory' }, 'Clear memory and variables')),
     operator('×', 'Multiply'),
 
-    digit('4'), digit('5'), digit('6'),
+    digit('4', openMode('MATRIX', 'MATRIX', 'Matrix')),
+    digit('5', openMode('VECTOR', 'VECTOR', 'Vector')),
+    digit('6', openMode('EQN', 'EQN', 'Equation')),
     operator('−', 'Subtract'),
 
-    digit('1'), digit('2'), digit('3'),
+    digit('1', openMode('STAT', 'STAT', 'Statistics')),
+    digit('2', openMode('CMPLX', 'CMPLX', 'Complex')),
+    digit('3', openMode('BASE', 'BASEN', 'Base-N')),
     operator('+', 'Add'),
 
     { ...digit('0'), className: 'col-span-2' },
