@@ -6,79 +6,31 @@ import { useTheme } from '../hooks/useTheme';
 import { useCalculator } from '../hooks/useCalculator';
 
 const ScientificCalculator = () => {
-  const {
-    darkMode,
-    isSystemTheme,
-    toggleTheme,
-    useSystemTheme
-  } = useTheme();
-
-  const {
-    display,
-    expression,
-    expressionHistory,
-    handleNumberClick,
-    handleOperatorClick,
-    handleEquals,
-    handleClear,
-    handleDecimal,
-    handleBackspace,
-    handleScientificFunction,
-    handleMemoryStore,
-    handleMemoryRecall,
-    handleMemoryClear,
-    handleMemoryAdd,
-    clearHistory
-  } = useCalculator();
-
-  // Theme-based classes
-  const calculatorClass = darkMode
-    ? "bg-gray-900 p-6 rounded-2xl shadow-2xl w-full max-w-md border border-gray-700"
-    : "bg-white p-6 rounded-2xl shadow-2xl w-full max-w-md border border-gray-200";
+  const theme = useTheme();
+  const { state, preview, dispatch } = useCalculator();
 
   return (
-    <div className="flex flex-col justify-center w-full items-center min-h-screen pt-8 transition-colors duration-300"
-      style={{ background: darkMode ? '#1a1a2e' : '#f0f2f5' }}>
-      <div className="relative mb-4 max-w-md w-full px-4">
-        <ThemeToggle
-          darkMode={darkMode}
-          isSystemTheme={isSystemTheme}
-          toggleTheme={toggleTheme}
-          useSystemTheme={useSystemTheme}
+    <div className="w-full max-w-md px-4">
+      <ThemeToggle {...theme} />
+
+      <main className="w-full rounded-2xl border border-gray-200 bg-white p-4 shadow-2xl sm:p-6 dark:border-gray-700 dark:bg-gray-900">
+        <h1 className="sr-only">Scientific Calculator</h1>
+        <CalculatorDisplay
+          state={state}
+          preview={preview}
+          onToggleAngleMode={() => dispatch({ type: 'toggleAngleMode' })}
         />
 
-        <div className={calculatorClass}>
-          <CalculatorDisplay
-            display={display}
-            expression={expression}
-            darkMode={darkMode}
-          />
+        <CalculatorButtons dispatch={dispatch} />
 
-          <CalculatorButtons
-            darkMode={darkMode}
-            handleNumberClick={handleNumberClick}
-            handleOperatorClick={handleOperatorClick}
-            handleEquals={handleEquals}
-            handleClear={handleClear}
-            handleDecimal={handleDecimal}
-            handleBackspace={handleBackspace}
-            handleScientificFunction={handleScientificFunction}
-            handleMemoryStore={handleMemoryStore}
-            handleMemoryRecall={handleMemoryRecall}
-            handleMemoryClear={handleMemoryClear}
-            handleMemoryAdd={handleMemoryAdd}
+        {state.history.length > 0 && (
+          <CalculatorHistory
+            history={state.history}
+            onRecall={(value) => dispatch({ type: 'recall', value })}
+            onClear={() => dispatch({ type: 'clearHistory' })}
           />
-
-          {/* Expression History Section */}
-          {expressionHistory.length > 0 && (
-            <CalculatorHistory
-              history={expressionHistory}
-              darkMode={darkMode}
-              clearHistory={clearHistory}
-            />
-          )}
-        </div>
-      </div>
+        )}
+      </main>
     </div>
   );
 };

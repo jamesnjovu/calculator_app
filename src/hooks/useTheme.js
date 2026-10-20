@@ -1,55 +1,44 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { loadJSON, saveJSON } from '../lib/storage';
 
+const STORAGE_KEY = 'calculator-theme';
+const THEME_COLORS = { dark: '#1a1a2e', light: '#f0f2f5' };
+
+const systemQuery = () => window.matchMedia('(prefers-color-scheme: dark)');
+
+// preference is 'system', 'light' or 'dark'
 export const useTheme = () => {
-    const [darkMode, setDarkMode] = useState(true);
-    const [isSystemTheme, setIsSystemTheme] = useState(true);
+    const [preference, setPreference] = useState(() => {
+        const saved = loadJSON(STORAGE_KEY, 'system');
+        return ['system', 'light', 'dark'].includes(saved) ? saved : 'system';
+    });
+    const [systemDark, setSystemDark] = useState(() => systemQuery().matches);
 
-    // Check system preference for dark/light mode and set up listener for changes
     useEffect(() => {
-        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        const mediaQuery = systemQuery();
+        const handleChange = (event) => setSystemDark(event.matches);
+        mediaQuery.addEventListener('change', handleChange);
+        return () => mediaQuery.removeEventListener('change', handleChange);
+    }, []);
 
-        // Initial setup based on system preference
-        if (isSystemTheme) {
-            setDarkMode(mediaQuery.matches);
-        }
+    const darkMode = preference === 'system' ? systemDark : preference === 'dark';
 
-        // Event listener for system theme changes
-        const handleThemeChange = (e) => {
-            if (isSystemTheme) {
-                setDarkMode(e.matches);
-            }
-        };
+    useEffect(() => {
+        document.documentElement.classList.toggle('dark', darkMode);
+        document.documentElement.style.colorScheme = darkMode ? 'dark' : 'light';
+        document
+            .querySelector('meta[name="theme-color"]')
+            ?.setAttribute('content', darkMode ? THEME_COLORS.dark : THEME_COLORS.light);
+    }, [darkMode]);
 
-        // Add listener for theme changes
-        mediaQuery.addEventListener('change', handleThemeChange);
-
-        // Cleanup listener on component unmount
-        return () => {
-            mediaQuery.removeEventListener('change', handleThemeChange);
-        };
-    }, [isSystemTheme]);
-
-    const toggleTheme = () => {
-        // If currently using system theme, switch to manual mode
-        if (isSystemTheme) {
-            setIsSystemTheme(false);
-            setDarkMode(!darkMode); // Toggle from current state
-        } else {
-            // If already in manual mode, just toggle the theme
-            setDarkMode(!darkMode);
-        }
-    };
-
-    const useSystemTheme = () => {
-        setIsSystemTheme(true);
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        setDarkMode(prefersDark);
-    };
+    useEffect(() => {
+        saveJSON(STORAGE_KEY, preference);
+    }, [preference]);
 
     return {
         darkMode,
-        isSystemTheme,
-        toggleTheme,
-        useSystemTheme
+        isSystemTheme: preference === 'system',
+        toggleTheme: () => setPreference(darkMode ? 'light' : 'dark'),
+        resetToSystemTheme: () => setPreference('system'),
     };
 };

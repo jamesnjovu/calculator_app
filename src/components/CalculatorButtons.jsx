@@ -1,163 +1,73 @@
-import React from 'react';
-
-const CalculatorButtons = ({
-    darkMode,
-    handleNumberClick,
-    handleOperatorClick,
-    handleEquals,
-    handleClear,
-    handleDecimal,
-    handleBackspace,
-    handleScientificFunction,
-    handleMemoryStore,
-    handleMemoryRecall,
-    handleMemoryClear,
-    handleMemoryAdd,
-}) => {
-    // Button classes based on theme
-    const memoryBtnClass = darkMode
-        ? "btn col-span-1 bg-gray-800 text-gray-200 p-3 rounded-lg hover:bg-gray-700 transition-colors shadow-md"
-        : "btn col-span-1 bg-gray-200 text-gray-800 p-3 rounded-lg hover:bg-gray-300 transition-colors shadow-md";
-
-    const scientificBtnClass = darkMode
-        ? "btn col-span-1 bg-indigo-900 text-gray-200 p-3 rounded-lg hover:bg-indigo-800 transition-colors shadow-md"
-        : "btn col-span-1 bg-indigo-100 text-indigo-800 p-3 rounded-lg hover:bg-indigo-200 transition-colors shadow-md";
-
-    const numberBtnClass = darkMode
-        ? "btn col-span-1 bg-gray-700 text-white p-3 rounded-lg hover:bg-gray-600 transition-colors shadow-md"
-        : "btn col-span-1 bg-gray-100 text-gray-800 p-3 rounded-lg hover:bg-gray-200 transition-colors shadow-md";
-
-    const operatorBtnClass = darkMode
-        ? "btn col-span-1 bg-purple-700 text-white p-3 rounded-lg hover:bg-purple-600 transition-colors shadow-md"
-        : "btn col-span-1 bg-purple-100 text-purple-800 p-3 rounded-lg hover:bg-purple-200 transition-colors shadow-md";
-
-    const equalsBtnClass = darkMode
-        ? "btn col-span-1 bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-500 transition-colors shadow-md"
-        : "btn col-span-1 bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition-colors shadow-md";
-
-    const clearBtnClass = darkMode
-        ? "btn col-span-1 bg-red-700 text-white p-3 rounded-lg hover:bg-red-600 transition-colors shadow-md"
-        : "btn col-span-1 bg-red-500 text-white p-3 rounded-lg hover:bg-red-600 transition-colors shadow-md";
-
-    return (
-        <div className="grid grid-cols-5 gap-3">
-            {/* Memory row */}
-            <button onClick={handleMemoryStore} className={memoryBtnClass}>
-                MS
-            </button>
-            <button onClick={handleMemoryRecall} className={memoryBtnClass}>
-                MR
-            </button>
-            <button onClick={handleMemoryClear} className={memoryBtnClass}>
-                MC
-            </button>
-            <button onClick={handleMemoryAdd} className={memoryBtnClass}>
-                M+
-            </button>
-            <button onClick={handleClear} className={clearBtnClass}>
-                C
-            </button>
-
-            {/* Scientific functions row 1 */}
-            <button onClick={() => handleScientificFunction('sin')} className={scientificBtnClass}>
-                sin
-            </button>
-            <button onClick={() => handleScientificFunction('cos')} className={scientificBtnClass}>
-                cos
-            </button>
-            <button onClick={() => handleScientificFunction('tan')} className={scientificBtnClass}>
-                tan
-            </button>
-            <button onClick={() => handleScientificFunction('log')} className={scientificBtnClass}>
-                log
-            </button>
-            <button onClick={() => handleScientificFunction('ln')} className={scientificBtnClass}>
-                ln
-            </button>
-
-            {/* Scientific functions row 2 */}
-            <button onClick={() => handleScientificFunction('sqrt')} className={scientificBtnClass}>
-                √
-            </button>
-            <button onClick={() => handleScientificFunction('1/x')} className={scientificBtnClass}>
-                1/x
-            </button>
-            <button onClick={() => handleScientificFunction('x^2')} className={scientificBtnClass}>
-                x²
-            </button>
-            <button onClick={() => handleScientificFunction('pi')} className={scientificBtnClass}>
-                π
-            </button>
-            <button onClick={() => handleScientificFunction('e')} className={scientificBtnClass}>
-                e
-            </button>
-
-            {/* Main calculator pad */}
-            <button onClick={() => handleNumberClick('7')} className={numberBtnClass}>
-                7
-            </button>
-            <button onClick={() => handleNumberClick('8')} className={numberBtnClass}>
-                8
-            </button>
-            <button onClick={() => handleNumberClick('9')} className={numberBtnClass}>
-                9
-            </button>
-            <button onClick={handleBackspace} className={memoryBtnClass}>
-                ⌫
-            </button>
-            <button onClick={() => handleOperatorClick('÷')} className={operatorBtnClass}>
-                ÷
-            </button>
-
-            <button onClick={() => handleNumberClick('4')} className={numberBtnClass}>
-                4
-            </button>
-            <button onClick={() => handleNumberClick('5')} className={numberBtnClass}>
-                5
-            </button>
-            <button onClick={() => handleNumberClick('6')} className={numberBtnClass}>
-                6
-            </button>
-            <button onClick={() => handleOperatorClick('(')} className={scientificBtnClass}>
-                (
-            </button>
-            <button onClick={() => handleOperatorClick('×')} className={operatorBtnClass}>
-                ×
-            </button>
-
-            <button onClick={() => handleNumberClick('1')} className={numberBtnClass}>
-                1
-            </button>
-            <button onClick={() => handleNumberClick('2')} className={numberBtnClass}>
-                2
-            </button>
-            <button onClick={() => handleNumberClick('3')} className={numberBtnClass}>
-                3
-            </button>
-            <button onClick={() => handleOperatorClick(')')} className={scientificBtnClass}>
-                )
-            </button>
-            <button onClick={() => handleOperatorClick('−')} className={operatorBtnClass}>
-                −
-            </button>
-
-            <button onClick={() => handleNumberClick('0')} className={numberBtnClass}>
-                0
-            </button>
-            <button onClick={handleDecimal} className={numberBtnClass}>
-                .
-            </button>
-            <button onClick={() => handleOperatorClick('^')} className={scientificBtnClass}>
-                x^y
-            </button>
-            <button onClick={() => handleOperatorClick('+')} className={operatorBtnClass}>
-                +
-            </button>
-            <button onClick={handleEquals} className={equalsBtnClass}>
-                =
-            </button>
-        </div>
-    );
+const VARIANTS = {
+    memory: 'bg-gray-200 text-gray-800 hover:bg-gray-300 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700',
+    scientific: 'bg-indigo-100 text-indigo-800 hover:bg-indigo-200 dark:bg-indigo-900 dark:text-gray-200 dark:hover:bg-indigo-800',
+    number: 'bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600',
+    operator: 'bg-purple-100 text-purple-800 hover:bg-purple-200 dark:bg-purple-700 dark:text-white dark:hover:bg-purple-600',
+    equals: 'bg-blue-500 text-white hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-500',
+    clear: 'bg-red-500 text-white hover:bg-red-600 dark:bg-red-700 dark:hover:bg-red-600',
 };
+
+const digit = (value) => ({ label: value, action: { type: 'digit', value }, variant: 'number' });
+const operator = (label, ariaLabel) => ({ label, ariaLabel, action: { type: 'operator', value: label }, variant: 'operator' });
+const fn = (label, value, ariaLabel) => ({ label, ariaLabel, action: { type: 'function', value }, variant: 'scientific' });
+
+// Laid out row by row on a 5 column grid
+const BUTTONS = [
+    { label: 'MC', ariaLabel: 'Memory clear', action: { type: 'memoryClear' }, variant: 'memory' },
+    { label: 'MR', ariaLabel: 'Memory recall', action: { type: 'memoryRecall' }, variant: 'memory' },
+    { label: 'M+', ariaLabel: 'Memory add', action: { type: 'memoryAdd' }, variant: 'memory' },
+    { label: 'M−', ariaLabel: 'Memory subtract', action: { type: 'memorySubtract' }, variant: 'memory' },
+    { label: 'MS', ariaLabel: 'Memory store', action: { type: 'memoryStore' }, variant: 'memory' },
+
+    fn('sin', 'sin', 'Sine'),
+    fn('cos', 'cos', 'Cosine'),
+    fn('tan', 'tan', 'Tangent'),
+    fn('log', 'log', 'Logarithm base 10'),
+    fn('ln', 'ln', 'Natural logarithm'),
+
+    fn('√', 'sqrt', 'Square root'),
+    { label: 'x²', ariaLabel: 'Square', action: { type: 'square' }, variant: 'scientific' },
+    { label: 'xʸ', ariaLabel: 'Power', action: { type: 'operator', value: '^' }, variant: 'scientific' },
+    { label: '1/x', ariaLabel: 'Reciprocal', action: { type: 'reciprocal' }, variant: 'scientific' },
+    { label: 'π', ariaLabel: 'Pi', action: { type: 'constant', value: 'π' }, variant: 'scientific' },
+
+    { label: '(', ariaLabel: 'Open parenthesis', action: { type: 'openParen' }, variant: 'scientific' },
+    { label: ')', ariaLabel: 'Close parenthesis', action: { type: 'closeParen' }, variant: 'scientific' },
+    { label: 'e', ariaLabel: "Euler's number", action: { type: 'constant', value: 'e' }, variant: 'scientific' },
+    { label: '⌫', ariaLabel: 'Backspace', action: { type: 'backspace' }, variant: 'memory' },
+    { label: 'C', ariaLabel: 'Clear', action: { type: 'clear' }, variant: 'clear' },
+
+    digit('7'), digit('8'), digit('9'),
+    operator('÷', 'Divide'),
+    { label: 'Ans', ariaLabel: 'Previous answer', action: { type: 'answer' }, variant: 'memory' },
+
+    digit('4'), digit('5'), digit('6'),
+    operator('×', 'Multiply'),
+    { label: '±', ariaLabel: 'Toggle sign', action: { type: 'toggleSign' }, variant: 'memory' },
+
+    digit('1'), digit('2'), digit('3'),
+    operator('−', 'Subtract'),
+    { label: '=', ariaLabel: 'Equals', action: { type: 'evaluate' }, variant: 'equals', className: 'row-span-2' },
+
+    { ...digit('0'), className: 'col-span-2' },
+    { label: '.', ariaLabel: 'Decimal point', action: { type: 'decimal' }, variant: 'number' },
+    operator('+', 'Add'),
+];
+
+const CalculatorButtons = ({ dispatch }) => (
+    <div className="grid grid-cols-5 gap-2 sm:gap-3">
+        {BUTTONS.map(({ label, ariaLabel, action, variant, className = '' }) => (
+            <button
+                key={label}
+                type="button"
+                onClick={() => dispatch(action)}
+                aria-label={ariaLabel}
+                className={`min-h-11 rounded-lg p-2 text-lg font-medium shadow-md transition-colors select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 active:scale-95 sm:p-3 ${VARIANTS[variant]} ${className}`}
+            >
+                {label}
+            </button>
+        ))}
+    </div>
+);
 
 export default CalculatorButtons;
