@@ -1,179 +1,122 @@
-# Scientific Calculator React App
+# Scientific Calculator
 
-A modern scientific calculator built with React, Vite, and Tailwind CSS.
+A modern scientific calculator built with React, Vite and Tailwind CSS. It installs as a Progressive Web App and works offline.
 
-![Scientific Calculator Preview](https://via.placeholder.com/600x400.png?text=Scientific+Calculator)
+**Live demo:** https://jamesnjovu.github.io/calculator_app/
+
+[![CI and Deploy](https://github.com/jamesnjovu/calculator_app/actions/workflows/deploy.yml/badge.svg)](https://github.com/jamesnjovu/calculator_app/actions/workflows/deploy.yml)
 
 ## Features
 
-- **Basic Arithmetic Operations**: Addition, subtraction, multiplication, division
-- **Scientific Functions**: 
-  - Trigonometric functions (sin, cos, tan)
-  - Logarithmic functions (log, ln)
-  - Square root, reciprocal (1/x), square (x²)
-  - Constants (π, e)
-- **Memory Functions**: Store (MS), recall (MR), clear (MC), and to memory (M+)
-- **Expression Display**: Shows the complete mathematical expression
-- **Error Handling**: Gracefully handles invalid expressions
-- **Responsive Design**: Works on various screen sizes
+- **Arithmetic** with correct operator precedence: `+`, `−`, `×`, `÷`, powers (`xʸ`) and parentheses
+- **Scientific functions**: `sin`, `cos`, `tan`, `log`, `ln`, `√`, `x²`, `1/x`, constants `π` and `e`
+- **Degree / radian mode**: tap `DEG` / `RAD` in the display to switch
+- **Live preview** of the result while you type
+- **Memory**: `MS` (store), `MR` (recall), `M+`, `M−`, `MC` (clear), with an `M` indicator in the display
+- **Ans** inserts the previous result; `±` toggles the sign of the current number
+- **History**: newest first, tap an entry to reuse its result
+- **Keyboard support** (see below)
+- **Light, dark and system themes**
+- **Saved between visits**: theme, angle mode, memory and history
+- **Installable PWA** that works offline
 
-## Technologies Used
+## Usage
 
-- **React**: UI library for building the calculator interface
-- **Vite**: Next-generation frontend tooling for faster development
-- **Tailwind CSS**: Utility-first CSS framework for styling
-- **Math.js**: Advanced math library for expression evaluation
+Type an expression and press `=`. Functions such as `sin` open a parenthesis (`sin(`); missing closing parentheses are added automatically when you evaluate. Pressing an operator right after a result continues from that result; typing a number starts a new calculation.
 
-## Installation
+Invalid operations (division by zero, `√` of a negative number, `tan(90°)` and so on) show `Error`. The next key press clears it.
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/jamesnjovu/calculator_app.git
-   cd calculator_app
-   ```
+### Keyboard shortcuts
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+| Key | Action |
+| --- | --- |
+| `0`–`9`, `.` | Digits and decimal point |
+| `+` `-` `*` `/` `^` | Operators |
+| `(` `)` | Parentheses |
+| `p`, `e` | π and e |
+| `Enter` or `=` | Evaluate |
+| `Backspace` | Delete the last character or function |
+| `Escape`, `Delete` or `c` | Clear |
 
-3. Start the development server:
-   ```bash
-   npm run dev
-   ```
+## Getting started
 
-4. Open your browser and navigate to:
-   ```
-   http://localhost:5173
-   ```
+Requires Node.js 20 or newer.
 
-## Project Structure
+```bash
+git clone https://github.com/jamesnjovu/calculator_app.git
+cd calculator_app
+npm install
+npm run dev
+```
 
-I've separated the calculator code into multiple files following a modular component architecture pattern. Here's the new structure:
+Then open http://localhost:5173/calculator_app/.
+
+### Scripts
+
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start the development server |
+| `npm run build` | Build for production into `dist/` |
+| `npm run preview` | Serve the production build locally |
+| `npm test` | Run the unit tests |
+| `npm run lint` | Lint the code |
+| `npm run deploy` | Build and publish `dist/` to the `gh-pages` branch manually |
+
+## Deployment
+
+Every push to `main` runs the [CI and Deploy](.github/workflows/deploy.yml) workflow: it lints, tests and builds the app, then publishes `dist/` to the `gh-pages` branch, which GitHub Pages serves. Pull requests run the same checks without deploying.
+
+## Project structure
 
 ```
-calculator-app/
+calculator_app/
+├── .github/workflows/deploy.yml   # CI and GitHub Pages deployment
 ├── public/
-│   └── vite.svg
+│   ├── icons/                     # App icons (SVG and PNG)
+│   ├── manifest.json              # PWA manifest
+│   └── sw.js                      # Service worker (offline support)
 ├── src/
 │   ├── components/
-│   │   ├── ScientificCalculator.jsx     // Main component
-│   │   ├── CalculatorDisplay.jsx        // Display component
-│   │   ├── CalculatorButtons.jsx        // Buttons grid component
-│   │   ├── CalculatorHistory.jsx        // History component
-│   │   └── ThemeToggle.jsx              // Theme controls component
+│   │   ├── ScientificCalculator.jsx   # Main layout
+│   │   ├── CalculatorDisplay.jsx      # Expression, result, DEG/RAD and memory indicator
+│   │   ├── CalculatorButtons.jsx      # Button grid
+│   │   ├── CalculatorHistory.jsx      # Calculation history
+│   │   └── ThemeToggle.jsx            # Theme controls
 │   ├── hooks/
-│   │   ├── useTheme.js                  // Theme management logic
-│   │   └── useCalculator.js             // Calculator state & operations
-│   ├── App.jsx                          // App container
-│   ├── main.jsx                         // Entry point
-│   └── index.css                        // Tailwind imports
-├── .gitignore
-├── eslint.config.js
+│   │   ├── useCalculator.js           # Calculator state, persistence, keyboard input
+│   │   ├── useInstallPrompt.js        # PWA install button
+│   │   └── useTheme.js                # Light, dark and system theme
+│   ├── lib/
+│   │   ├── calculator.js              # Calculator logic (pure reducer)
+│   │   ├── calculator.test.js         # Unit tests
+│   │   └── storage.js                 # Safe localStorage helpers
+│   ├── App.jsx
+│   ├── main.jsx
+│   ├── registerSW.js
+│   └── index.css
 ├── index.html
 ├── package.json
-├── postcss.config.js
-├── README.md
 ├── tailwind.config.js
 └── vite.config.js
 ```
 
-## Component Architecture
-
-The code has been separated into the following components and hooks:
-
-### Components
-
-1. **ScientificCalculator.jsx**
-   - Main container component
-   - Combines all sub-components
-   - Manages layout and theme application
-
-2. **CalculatorDisplay.jsx**
-   - Shows current expression and result
-   - Handles display formatting
-
-3. **CalculatorButtons.jsx**
-   - Contains the calculator button grid
-   - Handles button rendering and styling
-
-4. **CalculatorHistory.jsx**
-   - Displays calculation history
-   - Manages history item styling
-
-5. **ThemeToggle.jsx**
-   - Contains theme control buttons
-   - Handles theme toggle UI
-
-### Hooks
-
-1. **useTheme.js**
-   - Manages theme state (dark/light)
-   - Handles system theme detection
-   - Provides theme toggle functions
-
-2. **useCalculator.js**
-   - Manages calculator state
-   - Contains all calculator logic
-   - Handles operations and history
-
-## Benefits of This Structure
-
-- **Separation of Concerns**: Each component has a single responsibility
-- **Reusability**: Components can be reused in other contexts
-- **Maintainability**: Easier to update and maintain individual parts
-- **Testability**: Smaller components are easier to test
-- **Readability**: Code is organized and easier to understand
-
-The application logic is separated from the UI components through the use of custom hooks, making the code more modular and following best practices for React development.
-
-## Usage Guide
-
-### Basic Operations
-- Enter numbers using the number pad
-- Use the operators (+, −, ×, ÷) for basic arithmetic
-- Press = to evaluate the expression
-
-### Scientific Functions
-- Press the corresponding button for scientific functions (sin, cos, tan, etc.)
-- For functions like sin, cos, etc., enter the value first, then press the function button
-- Constants (π, e) can be inserted directly into your calculation
-
-### Memory Operations
-- MS: Store current value in memory
-- MR: Recall value from memory
-- MC: Clear memory
-- M+: Add current value to memory
-
-### Additional Features
-- C: Clear the display and current expression
-- ⌫: Delete the last character
-- ( and ): Use parentheses for complex expressions
-- x^y: Calculate x raised to the power of y
-
-## Build for Production
-
-```bash
-npm run build
-```
-
-The build artifacts will be stored in the `dist/` directory.
+All calculator behaviour lives in `src/lib/calculator.js` as a pure reducer, which keeps the UI components simple and makes the logic easy to test. Expressions are evaluated with [math.js](https://mathjs.org/) rather than `eval`.
 
 ## Contributing
 
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make sure `npm run lint` and `npm test` pass
+4. Commit your changes and push the branch
+5. Open a pull request
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
 ## Acknowledgments
 
-- [React](https://reactjs.org/)
-- [Vite](https://vitejs.dev/)
+- [React](https://react.dev/)
+- [Vite](https://vite.dev/)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [Math.js](https://mathjs.org/)
